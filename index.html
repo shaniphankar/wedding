@@ -118,23 +118,6 @@
             letter-spacing: 0.5px;
         }
 
-        .divider {
-            width: 60px; height: 2px;
-            background: var(--secondary-color);
-            margin: 0 auto 30px;
-            position: relative;
-        }
-        .divider::before {
-            content: '❦';
-            position: absolute;
-            top: -13px; left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-color);
-            color: var(--secondary-color);
-            font-size: 16px;
-            padding: 0 8px;
-        }
-
         /* === Hero Section === */
         #home {
             max-width: 620px;
@@ -163,6 +146,49 @@
         }
         .time-box span { display: block; font-size: 28px; font-weight: 600; }
         .time-box small { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+
+        /* Add to Calendar */
+        .cal-wrap { position: relative; display: inline-block; margin-top: 24px; }
+        .cal-btn {
+            background: #fff;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 11px 22px;
+            border-radius: 30px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(107,63,160,0.18);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .cal-btn:hover { background: var(--primary-color); color: #fff; }
+        .cal-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(78,44,120,0.22);
+            overflow: hidden;
+            min-width: 220px;
+            z-index: 50;
+        }
+        .cal-menu.open { display: block; }
+        .cal-menu a {
+            display: block;
+            padding: 13px 18px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            text-align: left;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .cal-menu a:hover { background: var(--bg-color); color: var(--primary-color); }
+        .cal-menu a + a { border-top: 1px solid #eee; }
 
         /* === RSVP Section === */
         #rsvp,
@@ -241,6 +267,14 @@
         }
         .submit-btn:disabled { opacity: 0.7; cursor: default; }
 
+        .stay-tuned {
+            font-family: var(--font-script);
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-top: 40px;
+            line-height: 1.2;
+        }
+
         /* === Music Toggle === */
         .music-toggle {
             position: fixed;
@@ -269,10 +303,7 @@
             padding: 40px 20px;
         }
         footer .names { font-family: var(--font-script); font-size: 32px; margin-bottom: 8px; }
-        footer .socials { margin: 14px 0; }
-        footer .socials a { color: #fff; margin: 0 10px; text-decoration: none; font-size: 13px; letter-spacing: 1px; opacity: 0.9; }
-        footer .socials a:hover { opacity: 1; text-decoration: underline; }
-        footer .made { font-size: 12px; margin-top: 6px; opacity: 0.75; }
+        footer .made { font-size: 12px; margin-top: 14px; opacity: 0.75; }
 
         /* === Mobile Responsiveness === */
         @media (max-width: 820px) {
@@ -306,12 +337,19 @@
                 <div class="time-box"><span id="minutes">00</span><small>Mins</small></div>
                 <div class="time-box"><span id="seconds">00</span><small>Secs</small></div>
             </div>
+
+            <div class="cal-wrap">
+                <button class="cal-btn" id="calBtn" aria-haspopup="true" aria-expanded="false">📅 Add to Calendar</button>
+                <div class="cal-menu" id="calMenu" role="menu">
+                    <a id="calGoogle" href="#" target="_blank" rel="noopener" role="menuitem">📆 Google Calendar</a>
+                    <a id="calIcs" href="#" role="menuitem">🍎 Apple / Outlook (.ics)</a>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- RSVP Section -->
     <section id="rsvp" class="reveal">
-        <div class="divider"></div>
         <h2 class="section-title">RSVP</h2>
         <p class="section-subtitle">We would be honored to have you celebrate with us</p>
 
@@ -371,6 +409,8 @@
 
             <button type="submit" class="submit-btn">Send RSVP</button>
         </form>
+
+        <p class="stay-tuned">Stay tuned for more updates!</p>
     </section>
 
     </div><!-- /.invite-frame -->
@@ -379,10 +419,7 @@
     <footer>
         <p class="names">Lakshmi &amp; Phani</p>
         <p style="font-size:13px; letter-spacing:1px;">21st &amp; 22nd February 2027 &nbsp;•&nbsp; Bengaluru</p>
-        <div class="socials">
-            <a href="#rsvp">RSVP</a>
-        </div>
-        <p class="made">Made with 💜 for the Big Day</p>
+        <p class="made">Made with 💜 by Lakshmi &amp; Phani</p>
     </footer>
 
     <!-- Background music: tap the ♪ button (bottom-right) to play/pause. -->
@@ -473,23 +510,88 @@
                 });
         });
 
-        /* === Background Music Toggle === */
+        /* === Add to Calendar (Wedding: 3 PM IST Feb 21 → 3 PM IST Feb 22, 2027 = 09:30–09:30 UTC) === */
+        (function () {
+            const calBtn = document.getElementById('calBtn');
+            const calMenu = document.getElementById('calMenu');
+
+            document.getElementById('calGoogle').href =
+                'https://calendar.google.com/calendar/render?action=TEMPLATE'
+                + '&text=' + encodeURIComponent("Lakshmi & Phani’s Wedding")
+                + '&dates=20270221T093000Z/20270222T093000Z'
+                + '&details=' + encodeURIComponent("We would be honored to have you celebrate with us!\nhttps://shaniphankar.github.io/wedding/")
+                + '&location=' + encodeURIComponent("Bengaluru, Karnataka, India")
+                + '&ctz=Asia/Kolkata';
+
+            calBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const open = calMenu.classList.toggle('open');
+                calBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            document.addEventListener('click', function () {
+                calMenu.classList.remove('open');
+                calBtn.setAttribute('aria-expanded', 'false');
+            });
+
+            const ics = [
+                'BEGIN:VCALENDAR', 'VERSION:2.0',
+                'PRODID:-//Lakshmi and Phani//Wedding//EN', 'CALSCALE:GREGORIAN',
+                'BEGIN:VEVENT',
+                'UID:lakshmi-phani-wedding-2027@shaniphankar.github.io',
+                'DTSTAMP:20260906T000000Z',
+                'DTSTART:20270221T093000Z',
+                'DTEND:20270222T093000Z',
+                'SUMMARY:Lakshmi & Phani’s Wedding',
+                'DESCRIPTION:We would be honored to have you celebrate with us! https://shaniphankar.github.io/wedding/',
+                'LOCATION:Bengaluru, Karnataka, India',
+                'END:VEVENT', 'END:VCALENDAR'
+            ].join('\r\n');
+
+            document.getElementById('calIcs').addEventListener('click', function (e) {
+                e.preventDefault();
+                const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'lakshmi-phani-wedding.ics';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+                calMenu.classList.remove('open');
+            });
+        })();
+
+        /* === Background Music: autoplay with a first-interaction fallback ===
+           Browsers block audio autoplay until the user interacts with the page, so we
+           try to play on load AND on the first click / tap / key / scroll anywhere. */
         const music = document.getElementById('bgMusic');
         const musicToggle = document.getElementById('musicToggle');
-        musicToggle.addEventListener('click', () => {
-            if (!music.querySelector('source') && !music.src) {
-                alert("Add your song as 'music.mp3' next to index.html and uncomment the <source> tag to enable music. 🎵");
-                return;
-            }
-            if (music.paused) {
-                music.play();
-                musicToggle.classList.add('playing');
-                musicToggle.title = 'Pause music';
-            } else {
-                music.pause();
-                musicToggle.classList.remove('playing');
-                musicToggle.title = 'Play music';
-            }
+        const kickEvents = ['click', 'touchstart', 'keydown', 'scroll'];
+
+        function updateMusicUI() {
+            musicToggle.classList.toggle('playing', !music.paused);
+            musicToggle.title = music.paused ? 'Play music' : 'Pause music';
+        }
+        function playMusic() {
+            music.play().catch(function () {});   // rejects if not yet allowed; we retry on interaction
+        }
+        function onFirstInteraction() { playMusic(); }
+        function stopListening() {
+            kickEvents.forEach(function (evt) { window.removeEventListener(evt, onFirstInteraction); });
+        }
+
+        music.addEventListener('play', function () { stopListening(); updateMusicUI(); });
+        music.addEventListener('pause', updateMusicUI);
+
+        playMusic();                                // 1) try to autoplay right away
+        kickEvents.forEach(function (evt) {          // 2) else start on first interaction
+            window.addEventListener(evt, onFirstInteraction, { passive: true });
+        });
+
+        musicToggle.addEventListener('click', function () {   // 3) manual play/pause
+            if (music.paused) playMusic();
+            else music.pause();
         });
     </script>
 </body>
