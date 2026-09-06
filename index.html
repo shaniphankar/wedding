@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakshmi & Phani - Wedding</title>
+    <meta name="description" content="Join us to celebrate the wedding of Lakshmi & Phani — 21st & 22nd February 2027, Bengaluru.">
+
+    <!-- Open Graph (for nice link previews on WhatsApp / social) -->
+    <meta property="og:title" content="Lakshmi & Phani - Wedding">
+    <meta property="og:description" content="21st & 22nd February 2027 • Bengaluru. We would be honored to have you celebrate with us!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="wedding_extended_background.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Jost:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* === Color scheme drawn from wedding_extended_background.png === */
+        :root {
+            --primary-color: #6B3FA0;   /* Deep purple */
+            --primary-dark: #4E2C78;
+            --secondary-color: #C7387F; /* Magenta pink */
+            --accent-blue: #3E5C9A;     /* Denim blue */
+            --highlight: #F3EBA0;       /* Pale butter yellow */
+            --sage: #9DBF6A;            /* Sage green */
+            --bg-color: #EBE0EA;        /* Soft mauve / lavender */
+            --bg-alt: #E0CFDE;          /* Deeper mauve */
+            --text-color: #3A2E4A;      /* Dark plum */
+            --muted: #7d6f86;
+            --grid-bg: #CFAFC2;                        /* matches the invite grid so edges blend */
+            --grid-line: #e2c6d7;                      /* crisp CSS grid line color (no raster scaling / moiré) */
+            --art-w: clamp(1200px, 135vw, 2200px);     /* rendered width of the invite artwork */
+            --font-script: 'Great Vibes', cursive;
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            /* Grid drawn with CSS (crisp at any zoom/scale — no moiré from raster-scaling
+               a fine repeating pattern) with the invite artwork (couple + text, transparent
+               background) layered on top. */
+            background:
+                url('hero_art_fullcanvas.png') center 20px / var(--art-w) auto no-repeat,
+                repeating-linear-gradient(to right, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 28px),
+                repeating-linear-gradient(to bottom, var(--grid-line) 0, var(--grid-line) 1px, transparent 1px, transparent 28px),
+                var(--grid-bg);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* === Decorative page border (floral / hearts / sparkles) ===
+           Wraps everything EXCEPT the footer, so the border ends right above the
+           purple "Lakshmi & Phani" bar instead of framing it too.
+           Uses border-image so it always fits the wrapped content's height exactly,
+           however tall it renders, instead of a fixed-size PNG that could get cropped. */
+        .invite-frame {
+            border-style: solid;
+            border-color: transparent;
+            border-width: 46px 46px 84px 46px;
+            border-image-source: url('invite-border.png');
+            border-image-slice: 200 200 380 200;
+            border-image-width: 46px 46px 84px 46px;
+            border-image-repeat: round;
+        }
+
+        img { max-width: 100%; display: block; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap; border: 0;
+        }
+
+        /* === Reveal-on-scroll animation === */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* === Common Section Styles === */
+        section {
+            padding: 90px 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: var(--font-script);
+            font-size: 52px;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            line-height: 1.1;
+        }
+
+        .section-subtitle {
+            font-size: 15px;
+            color: var(--muted);
+            margin-bottom: 45px;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            width: 60px; height: 2px;
+            background: var(--secondary-color);
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .divider::before {
+            content: '❦';
+            position: absolute;
+            top: -13px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            color: var(--secondary-color);
+            font-size: 16px;
+            padding: 0 8px;
+        }
+
+        /* === Hero Section === */
+        #home {
+            max-width: 620px;
+            margin: 0 auto;
+            text-align: center;
+            /* top padding clears the whole invite graphic (its bottom = 0.323 × art width) */
+            padding: calc(40px + 0.323 * var(--art-w)) 14px 24px;
+        }
+
+        .hero-text {
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Countdown */
+        .countdown { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 0; }
+        .time-box {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            min-width: 78px;
+            box-shadow: 0 8px 20px rgba(107,63,160,0.30);
+        }
+        .time-box span { display: block; font-size: 28px; font-weight: 600; }
+        .time-box small { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+
+        /* === RSVP Section === */
+        #rsvp,
+        #rsvp .section-title,
+        #rsvp input,
+        #rsvp select,
+        #rsvp textarea,
+        #rsvp .submit-btn {
+            font-family: 'Futura', 'Jost', 'Century Gothic', 'Trebuchet MS', sans-serif;
+        }
+
+        .rsvp-form {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 42px;
+            border-radius: 12px;
+            box-shadow: 0 8px 28px rgba(78,44,120,0.12);
+            text-align: left;
+        }
+        .form-row { display: flex; gap: 18px; flex-wrap: wrap; }
+        .form-row .form-group { flex: 1; min-width: 200px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d6c6d8;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            background: var(--bg-color);
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(199,56,127,0.15);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            width: 100%;
+            font-size: 15px;
+            letter-spacing: 1px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: var(--font-body);
+        }
+        .submit-btn:hover { background-color: var(--primary-dark); }
+        .form-success {
+            display: none;
+            background: #eef7ee;
+            border: 1px solid #bcdcbc;
+            color: #2e6b32;
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .form-error {
+            display: none;
+            background: #fbeaea;
+            border: 1px solid #e2b8b8;
+            color: #a33232;
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .submit-btn:disabled { opacity: 0.7; cursor: default; }
+
+        /* === Music Toggle === */
+        .music-toggle {
+            position: fixed;
+            bottom: 22px; right: 22px;
+            z-index: 1500;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 6px 18px rgba(107,63,160,0.38);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .music-toggle.playing { animation: spin 4s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* === Footer === */
+        footer {
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        footer .names { font-family: var(--font-script); font-size: 32px; margin-bottom: 8px; }
+        footer .socials { margin: 14px 0; }
+        footer .socials a { color: #fff; margin: 0 10px; text-decoration: none; font-size: 13px; letter-spacing: 1px; opacity: 0.9; }
+        footer .socials a:hover { opacity: 1; text-decoration: underline; }
+        footer .made { font-size: 12px; margin-top: 6px; opacity: 0.75; }
+
+        /* === Mobile Responsiveness === */
+        @media (max-width: 820px) {
+            section { padding: 54px 18px; }
+            .section-title { font-size: 44px; }
+            /* keep all four countdown boxes on one line by letting them shrink evenly */
+            .countdown { flex-wrap: nowrap; gap: 8px; }
+            .time-box { flex: 1; min-width: 0; padding: 14px 4px; }
+            .time-box span { font-size: 26px; }
+
+            /* Thinner border on small screens so it doesn't eat into content width */
+            .invite-frame {
+                border-width: 20px 20px 36px 20px;
+                border-image-width: 20px 20px 36px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invite-frame">
+
+    <!-- Hero Section -->
+    <header id="home">
+        <h1 class="sr-only">Lakshmi &amp; Phani are getting married — 21st &amp; 22nd February 2027, Bengaluru</h1>
+
+        <div class="hero-text">
+            <div class="countdown" id="countdown">
+                <div class="time-box"><span id="days">00</span><small>Days</small></div>
+                <div class="time-box"><span id="hours">00</span><small>Hours</small></div>
+                <div class="time-box"><span id="minutes">00</span><small>Mins</small></div>
+                <div class="time-box"><span id="seconds">00</span><small>Secs</small></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="reveal">
+        <div class="divider"></div>
+        <h2 class="section-title">RSVP</h2>
+        <p class="section-subtitle">We would be honored to have you celebrate with us</p>
+
+        <form class="rsvp-form" id="rsvpForm">
+            <div class="form-success" id="formSuccess">🎉 Thank you! Your RSVP has been noted. We can't wait to celebrate with you!</div>
+            <div class="form-error" id="formError">⚠️ Sorry, we couldn't send your RSVP just now. Please check your connection and try again.</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+91 …">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="side">Guest of</label>
+                    <select id="side" name="side">
+                        <option value="Bride (Lakshmi)">Bride (Lakshmi)</option>
+                        <option value="Groom (Phani)">Groom (Phani)</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" name="guests">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5+">5+</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="attending">Will you attend?</label>
+                <select id="attending" name="attending">
+                    <option value="Joyfully Accept">Joyfully Accept</option>
+                    <option value="Regretfully Decline">Regretfully Decline</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">A note for the couple</label>
+                <textarea id="message" name="message" placeholder="Your wishes / message (optional)"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send RSVP</button>
+        </form>
+    </section>
+
+    </div><!-- /.invite-frame -->
+
+    <!-- Footer -->
+    <footer>
+        <p class="names">Lakshmi &amp; Phani</p>
+        <p style="font-size:13px; letter-spacing:1px;">21st &amp; 22nd February 2027 &nbsp;•&nbsp; Bengaluru</p>
+        <div class="socials">
+            <a href="#rsvp">RSVP</a>
+        </div>
+        <p class="made">Made with 💜 for the Big Day</p>
+    </footer>
+
+    <!-- Background music: tap the ♪ button (bottom-right) to play/pause. -->
+    <audio id="bgMusic" loop preload="metadata">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle music" title="Play music">♪</button>
+
+    <!-- JavaScript -->
+    <script>
+        /* === Countdown Timer (to the first day of celebrations) === */
+        const countDownDate = new Date("Feb 21, 2027 10:00:00").getTime();
+        function pad(n) { return String(n).padStart(2, '0'); }
+        const timer = setInterval(function () {
+            const distance = countDownDate - Date.now();
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById('countdown').innerHTML =
+                    '<div class="time-box" style="min-width:auto;padding:14px 26px;">The big day is here! 🎉</div>';
+                return;
+            }
+            document.getElementById('days').textContent    = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
+            document.getElementById('hours').textContent   = pad(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+            document.getElementById('minutes').textContent = pad(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+            document.getElementById('seconds').textContent = pad(Math.floor((distance % (1000 * 60)) / 1000));
+        }, 1000);
+
+        /* === Reveal on Scroll === */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        /* === RSVP → Google Form ===
+           Submits silently to the linked Google Form so responses land in the Sheet.
+           'no-cors' means we can't read the reply, so we treat a completed request as
+           success and only show an error if the network request itself fails. */
+        const GFORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdmcQyIqLDDQQzfA9qChEpopxrd6ZzAsfBhwUUFqk90QL7C5w/formResponse";
+        const GFORM_FIELDS = {
+            name:      "entry.1704390313",
+            phone:     "entry.1448171440",
+            email:     "entry.217808654",
+            side:      "entry.1064513712",
+            guests:    "entry.1309221806",
+            attending: "entry.1172376527",
+            message:   "entry.482244601"
+        };
+
+        const form = document.getElementById('rsvpForm');
+        const successMsg = document.getElementById('formSuccess');
+        const errorMsg = document.getElementById('formError');
+        const submitBtn = form.querySelector('.submit-btn');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();               // native validation already passed (required fields)
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            const body = new URLSearchParams();
+            for (const [field, entry] of Object.entries(GFORM_FIELDS)) {
+                const el = document.getElementById(field);
+                if (el) body.append(entry, el.value);
+            }
+            body.append('fvv', '1');
+            body.append('pageHistory', '0');
+
+            const originalLabel = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending…';
+
+            fetch(GFORM_URL, { method: 'POST', mode: 'no-cors', body })
+                .then(() => {
+                    successMsg.style.display = 'block';
+                    successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    form.reset();
+                })
+                .catch(() => {
+                    errorMsg.style.display = 'block';
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalLabel;
+                });
+        });
+
+        /* === Background Music Toggle === */
+        const music = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.addEventListener('click', () => {
+            if (!music.querySelector('source') && !music.src) {
+                alert("Add your song as 'music.mp3' next to index.html and uncomment the <source> tag to enable music. 🎵");
+                return;
+            }
+            if (music.paused) {
+                music.play();
+                musicToggle.classList.add('playing');
+                musicToggle.title = 'Pause music';
+            } else {
+                music.pause();
+                musicToggle.classList.remove('playing');
+                musicToggle.title = 'Play music';
+            }
+        });
+    </script>
+</body>
+</html>
