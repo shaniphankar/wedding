@@ -36,6 +36,7 @@
             --grid-bg: #CFAFC2;                        /* matches the invite grid so edges blend */
             --grid-line: #e2c6d7;                      /* crisp CSS grid line color (no raster scaling / moiré) */
             --art-w: clamp(1200px, 135vw, 2200px);     /* rendered width of the invite artwork */
+            --sec-gap: 50px;                            /* half of the gap between sections (gap = 2×) */
             --font-script: 'Great Vibes', cursive;
             --font-heading: 'Cormorant Garamond', serif;
             --font-body: 'Montserrat', sans-serif;
@@ -96,7 +97,7 @@
 
         /* === Common Section Styles === */
         section {
-            padding: 52px 20px;
+            padding: var(--sec-gap) 20px;
             max-width: 1150px;
             margin: 0 auto;
             text-align: center;
@@ -124,7 +125,7 @@
             margin: 0 auto;
             text-align: center;
             /* top padding clears the whole invite graphic (its bottom = 0.323 × art width) */
-            padding: calc(40px + 0.323 * var(--art-w)) 14px 24px;
+            padding: calc(40px + 0.323 * var(--art-w)) 14px var(--sec-gap);
         }
 
         .hero-text {
@@ -304,14 +305,14 @@
             background-color: var(--primary-color);
             color: #fff;
             text-align: center;
-            padding: 40px 20px;
+            padding: var(--sec-gap) 20px;
         }
         footer .names { font-family: var(--font-script); font-size: 32px; margin-bottom: 8px; }
         footer .made { font-size: 12px; margin-top: 14px; opacity: 0.75; }
 
         /* === Mobile Responsiveness === */
         @media (max-width: 820px) {
-            section { padding: 54px 18px; }
+            :root { --sec-gap: 40px; }
             .section-title { font-size: 44px; }
             /* keep all four countdown boxes on one line by letting them shrink evenly */
             .countdown { flex-wrap: nowrap; gap: 8px; }
