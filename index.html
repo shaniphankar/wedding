@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#CFAFC2">
     <title>Lakshmi & Phani - Wedding</title>
     <meta name="description" content="Join us to celebrate the wedding of Lakshmi & Phani — 21st & 22nd February 2027, Bengaluru.">
 
@@ -44,7 +46,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; color-scheme: light; }  /* keep the designed light theme even when the device is in dark mode */
 
         body {
             font-family: var(--font-body);
@@ -225,6 +227,7 @@
             border-radius: 6px;
             font-family: var(--font-body);
             font-size: 14px;
+            color: var(--text-color);
             background: var(--bg-color);
             transition: border 0.2s ease, box-shadow 0.2s ease;
         }
